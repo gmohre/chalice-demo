@@ -7,7 +7,6 @@ from chalice import Chalice
 from chalice import NotFoundError
 
 app = Chalice(app_name='cardsearch')
-app.debug = True
 
 REGION = 'us-east-2'
 SCRYFALL_API_URL = 'https://api.scryfall.com/cards'
@@ -39,15 +38,19 @@ def card_post(key):
 		Location of image
 		Location of card JSON
     """
-    body = app.current_request.raw_body
-    image = base64.b64decode(body)
+    body = app.current_request.raw_body if app.current_request._body else None
+    image = base64.b64decode(body) if body else None
+    
 
     filename = '{}.png'.format(CARD_KEY)
     card_query_url = '{}/search?q={}'.format(SCRYFALL_API_URL, key)
 
-    card_query_resp = urllib2.urlopen(card_query_url)
-    card_query_resp = card_query_resp.read()
+    try:
+	card_query_resp = urllib2.urlopen(card_query_url)
+    except:
+	return {"status":"Error Card Not Found"}
 
+    card_query_resp = card_query_resp.read()
     card_query_json = json.loads(card_query_resp)
     cards = card_query_json['data']
     card = cards.pop()
@@ -59,13 +62,13 @@ def card_post(key):
 	'power':card.get('power'),
 	'toughness':card.get('toughness'),
 	'image':IMAGE_URL}
-
-    image_s3 = S3.put_object(
-	Bucket=BUCKET_KEY,
-	ACL='public-read',
-	Key=filename,
-        Body=image, 
-	ContentType='image/png')
+    if image:
+        image_s3 = S3.put_object(
+       	    Bucket=BUCKET_KEY,
+	    ACL='public-read',
+	    Key=filename,
+            Body=image, 
+	    ContentType='image/png')
 
     card_s3 = S3.put_object(
 	Bucket=BUCKET_KEY,
