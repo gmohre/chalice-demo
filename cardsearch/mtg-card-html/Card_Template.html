@@ -15,7 +15,6 @@
 <script>
 (function() {
 	$.getJSON( "my-card.json", function(data) {	 
-		console.log(data);
 	  	$("div.textBox").html(data['oracle_text']);
 	  	$("header.card-name > div").html(data['name']);
 	  	$("div.art > img").attr("src", data['image']);
