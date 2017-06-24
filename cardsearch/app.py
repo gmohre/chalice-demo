@@ -7,6 +7,7 @@ from chalice import Chalice
 from chalice import NotFoundError
 
 app = Chalice(app_name='cardsearch')
+app.debug = True
 
 REGION = 'us-east-2'
 SCRYFALL_API_URL = 'https://api.scryfall.com/cards'
@@ -16,11 +17,17 @@ S3 = boto3.client('s3')
 BUCKET_KEY =  'custom-cards'
 CARD_KEY = 'my-card.json'
 CARD_IMAGE = '{}.png'.format(CARD_KEY)
-
+CARD_URL = 'https://s3.{}.amazonaws.com/{}/{}'.format(REGION, BUCKET_KEY, CARD_KEY)
+IMAGE_URL = 'https://s3.{}.amazonaws.com/{}/{}'.format(REGION, BUCKET_KEY, CARD_IMAGE)
 
 @app.route('/card', methods=['GET'])
 def card_index():
-    return "OK"
+    """
+	Output:
+		Dict containing a status message, current card json URL, and current card image URL
+    """
+    return {"status":"OK", "current_card":CARD_URL, "current_image":IMAGE_URL}
+
 
 @app.route('/card/{key}', methods=['POST'])
 def card_post(key):
@@ -47,7 +54,11 @@ def card_post(key):
 
     card_data = {
 	'name':card.get('name'),
-	'oracle_text':card.get('oracle_text')}
+	'card_type':card.get('type_line'),
+	'oracle_text':card.get('oracle_text'),
+	'power':card.get('power'),
+	'toughness':card.get('toughness'),
+	'image':IMAGE_URL}
 
     image_s3 = S3.put_object(
 	Bucket=BUCKET_KEY,
@@ -62,5 +73,4 @@ def card_post(key):
 	Key=CARD_KEY,
 	Body=json.dumps(card_data))
 
-    return {'image':'https://s3.{}.amazonaws.com/{}/{}'.format(REGION, BUCKET_KEY, filename),
-	'card':'https://s3.{}.amazonaws.com/{}/{}'.format(REGION, BUCKET_KEY, CARD_KEY)}
+    return {'image':IMAGE_URL, 'card':CARD_URL}
