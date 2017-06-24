@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+	<title>Magic: The Gathering Card</title>
+	<link rel="stylesheet" href="css/mtg_custom.css" type="text/css">
+	<link href="css/mana.css" rel="stylesheet" type="text/css" />
+	<link href="css/keyrune.css" rel="stylesheet" type="text/css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+<script>
+(function() {
+	$.getJSON( "my-card.json", function(data) {	 
+		console.log(data);
+	  	$("div.textBox").html(data['oracle_text']);
+	  	$("header.card-name > div").html(data['name']);
+	  	$("div.art > img").attr("src", data['image']);
+	  	$("header.card-type > div").html("<h2>"+data['card_type']+"<i class='ss ss-tor'></i></h2>");
+	  	if (data['power'] != null){
+	  		$("header.powerToughness > div").html("<h2>"+data['power']+"/"+data['toughness']+"</h2>");
+	  	}
+	  	}
+	  );
+})();
+</script>
+<div class="flip-container" ontouchstart="this.classList.toggle('hover');">	
+<div class="flipper">	
+<div class="card front">
+	<div class="card-background">
+		<article>
+			<div class="card-body"></div>
+			<header class="card-name">
+				<div>
+					<h1>Creature's Name</h1>
+					<i class="ms ms-u ms-cost ms-shadow"></i>
+					<i class="ms ms-1 ms-cost ms-shadow"></i>
+				</div>
+			</header>
+				
+			<div class="art">
+				<img src="">
+			</div>
+
+			<header class="card-type">
+				<div>
+					<h2>Card Type — Another Type <i class="ss ss-tor"></i></h2>
+				</div>
+			</header>
+		<div class="textBox">
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec tincidunt lectus.</p>
+			<p>Sed malesuada pretium nibh ac lobortis. Sed sit amet nibh aliquam, dictum justo quis.</p>
+			<blockquote>
+				<p>“Quisque ullamcorper turpis id magna consectetur, sed molestie nunc pretium.”</p>
+				<p>—Condimentum</p>
+			</blockquote>
+
+		</div>	
+		<header class="powerToughness">
+			<div>
+			</div>
+		</header>
+		
+		<footer>
+			<p>100/100 C<br />
+			ABC ‧ EN - Ronniemon</p>
+			<h6>™ &amp; © 2016 Wizards of the Coast</h6>
+		</footer>
+		
+		</article>
+		
+	</div>
+</div>
+<div class="card back">
+	<img src="Images/Back.jpg" alt="Back" width="100%" height="auto">
+</div>
+</div>
+</div>			
+</body>
+
+</html>
