@@ -40,7 +40,6 @@ def card_post(key):
     """
     body = app.current_request.raw_body if app.current_request._body else None
     image = base64.b64decode(body) if body else None
-    
 
     filename = '{}.png'.format(CARD_KEY)
     card_query_url = '{}/search?q={}'.format(SCRYFALL_API_URL, key)
