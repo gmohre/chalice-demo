@@ -61,6 +61,7 @@ def card_post(key):
 	'power':card.get('power'),
 	'toughness':card.get('toughness'),
 	'image':IMAGE_URL}
+
     if image:
         image_s3 = S3.put_object(
        	    Bucket=BUCKET_KEY,
