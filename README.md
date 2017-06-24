@@ -1,6 +1,7 @@
 # Chalice Card Generator
 ## Features
 Generates custom Magic: The Gathering cards from user-provided image and query of the ScryFall API (http://api.scryfall.com). Uses mtg-card-html (https://github.com/ronniemon/mtg-card-html) for the card template.
+
 ![gabbo](gabbo_card.png)
 
 ### Status Endpoint GET
